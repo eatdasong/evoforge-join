@@ -6,22 +6,34 @@
 <title>Rejoindre un serveur — EvoForge</title>
 <!-- PAGE REBOND des liens de partage EvoForge.
      Les messageries ne rendent cliquables que les liens http(s) : ce lien-ci l'est, et il rouvre le schéma
-     `evoforge://mp/<ip>:<port>?name=…` que l'app a déclaré sur Windows. Page statique, sans dépendance,
-     hébergeable n'importe où (GitHub Pages, un site, un hébergeur statique). Copiez le dossier `join/` et
-     indiquez son adresse dans EvoForge › Réglages › « Lien de partage ». Paramètres : ?ip=&port=&name= -->
+     `evoforge://mp/<ip>:<port>?name=…` que l'app a déclaré sur Windows. Page statique, sans dépendance.
+     Paramètres : ?ip=&port=&name=&track=&layout=&players=&max=&ping=  (les cinq derniers = l'instantané au
+     moment du partage, affichés sur la page). ⚠ Les aperçus des messageries lisent les balises og:* du HTML
+     tel que servi, sans exécuter le script : sur un hébergement statique elles restent donc génériques. -->
+<meta property="og:site_name" content="EvoForge">
 <meta property="og:title" content="Rejoindre un serveur Assetto Corsa EVO">
-<meta property="og:description" content="Ouvre EvoForge directement sur le serveur partagé.">
+<meta property="og:description" content="Un serveur en ligne partagé depuis EvoForge — ouvre l'app directement dessus.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://eatdasong.github.io/evoforge-join/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#070a10">
 <style>
-  :root{--bg:#070a10;--bg-deep:#04060a;--card:#0e131d;--card2:#101826;--s0:#0a0e15;--ink:#e8eef6;--ink-dim:#b9c6d6;--muted:#8493a8;--muted2:#5f6d80;--accent:#e5241f;--accent2:#ff7d72;--ok:#33e08a;--line:#223145;--line-strong:#2c405a;--rs:7px;--r:11px}
+  :root{--bg:#070a10;--card:#0e131d;--card2:#101826;--s0:#0a0e15;--ink:#e8eef6;--ink-dim:#b9c6d6;--muted:#8493a8;--muted2:#5f6d80;--accent:#e5241f;--accent2:#ff7d72;--ok:#33e08a;--warn:#ffb020;--err:#ff4d4d;--line:#223145;--line-strong:#2c405a;--rs:7px}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(120% 65% at 88% -12%,rgba(229,36,31,.10),transparent 52%),var(--bg);color:var(--ink);font-family:'Segoe UI Variable Text','Segoe UI',system-ui,-apple-system,sans-serif}
-  .box{width:100%;max-width:520px;background:linear-gradient(180deg,var(--card2),var(--card) 55%);border:1px solid var(--line-strong);border-radius:14px;box-shadow:0 20px 60px -20px rgba(0,0,0,.85);padding:26px 26px 22px}
+  .box{width:100%;max-width:540px;background:linear-gradient(180deg,var(--card2),var(--card) 55%);border:1px solid var(--line-strong);border-radius:14px;box-shadow:0 20px 60px -20px rgba(0,0,0,.85);padding:26px 26px 22px}
   .brand{display:flex;align-items:center;gap:9px;font-family:'Bahnschrift','Oswald','Segoe UI Semibold',system-ui,sans-serif;font-weight:700;font-size:1rem;letter-spacing:.15em}
   .brand b{color:var(--accent2);font-weight:700}
   .kick{font-family:'Bahnschrift','Oswald',system-ui,sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
   h1{margin:0;font-family:'Bahnschrift','Oswald','Segoe UI Semibold',system-ui,sans-serif;font-weight:700;font-size:1.45rem;line-height:1.15;color:#fff}
   .addr{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.8rem;color:var(--ink-dim);margin-top:6px}
+  .facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .facts span{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.7rem;letter-spacing:.03em;padding:.3rem .6rem;border-radius:999px;border:1px solid var(--line-strong);background:var(--s0);color:var(--ink-dim)}
+  .facts span.ok{color:var(--ok);border-color:rgba(51,224,138,.4)}
+  .facts span.warn{color:var(--warn);border-color:rgba(255,176,32,.45)}
+  .facts span.err{color:var(--err);border-color:rgba(255,77,77,.45)}
   .row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
   .btn{flex:1 1 200px;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:var(--rs);font-family:'Bahnschrift','Oswald',system-ui,sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:1px solid var(--line-strong);background:var(--s0);color:var(--ink-dim)}
   .btn.primary{border:none;background:linear-gradient(180deg,#54f3ad,var(--ok));color:#052b1a;box-shadow:0 12px 26px -10px rgba(51,224,138,.65)}
@@ -29,7 +41,7 @@
   .note a{color:var(--accent2);text-decoration:none}
   .note a:hover{color:#fff}
   .status{margin-top:12px;font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.72rem;color:var(--muted2)}
-  .err{color:#ff4d4d}
+  .snap{margin-top:6px;font-size:.7rem;color:var(--muted2)}
 </style>
 </head>
 <body>
@@ -38,23 +50,32 @@
   <div class="kick">Serveur partagé</div>
   <h1 id="name">Serveur Assetto Corsa EVO</h1>
   <div class="addr" id="addr"></div>
+  <div class="facts" id="facts" hidden></div>
+  <div class="snap" id="snap" hidden>Instantané au moment du partage.</div>
   <div class="row">
     <a class="btn primary" id="open" href="#">Ouvrir dans EvoForge</a>
     <button class="btn" id="copy" type="button">Copier le lien EvoForge</button>
   </div>
-  <div class="note">Pas encore EvoForge ? <a id="get" href="https://github.com/eatdasong/evoforge/releases" target="_blank" rel="noopener">Télécharger la dernière version</a>, lancez-la une fois, puis revenez cliquer sur « Ouvrir dans EvoForge ».</div>
+  <div class="note">Pas encore EvoForge ? <a id="get" href="https://www.patreon.com/c/EvoForge" target="_blank" rel="noopener">Récupérer EvoForge sur Patreon</a>, lancez-le une fois, puis revenez cliquer sur « Ouvrir dans EvoForge ».</div>
   <div class="status" id="status"></div>
 </div>
 <script>
 (function () {
   var q = new URLSearchParams(location.search);
-  var ip = (q.get('ip') || '').trim(), port = (q.get('port') || '').trim(), name = (q.get('name') || '').trim();
+  var g = function (k) { return (q.get(k) || '').trim(); };
+  var ip = g('ip'), port = g('port'), name = g('name'), track = g('track'), layout = g('layout'), players = g('players'), max = g('max'), ping = g('ping');
   var ok = /^[a-z0-9.\-]+$/i.test(ip) && /^\d{1,5}$/.test(port);
   var link = ok ? 'evoforge://mp/' + ip + ':' + port + (name ? '?name=' + encodeURIComponent(name) : '') : '';
   var $ = function (id) { return document.getElementById(id); };
   if (name) { $('name').textContent = name; document.title = name + ' — EvoForge'; }
   $('addr').textContent = ok ? ip + ':' + port : 'lien incomplet (ip et port manquants)';
-  if (!ok) { $('open').classList.add('err'); $('open').textContent = 'Lien invalide'; $('open').removeAttribute('href'); $('copy').disabled = true; return; }
+  // l'instantané transmis dans le lien : circuit, pilotes, ping
+  var facts = [];
+  if (track) facts.push({ t: track + (layout ? ' · ' + layout : '') });
+  if (players !== '' && /^\d+$/.test(players)) facts.push({ t: players + (max && /^\d+$/.test(max) ? ' / ' + max : '') + ' pilote' + (Number(players) > 1 ? 's' : ''), c: Number(players) > 0 ? 'ok' : '' });
+  if (ping !== '' && /^\d+$/.test(ping) && Number(ping) > 0) facts.push({ t: ping + ' ms', c: Number(ping) < 50 ? 'ok' : Number(ping) < 120 ? 'warn' : 'err' });
+  if (facts.length) { var fx = $('facts'); facts.forEach(function (f) { var s = document.createElement('span'); s.textContent = f.t; if (f.c) s.className = f.c; fx.appendChild(s); }); fx.hidden = false; $('snap').hidden = false; }
+  if (!ok) { $('open').textContent = 'Lien invalide'; $('open').removeAttribute('href'); $('copy').disabled = true; return; }
   $('open').setAttribute('href', link);
   $('copy').onclick = function () {
     var done = function () { $('status').textContent = 'Lien EvoForge copié.'; };
