@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejoindre un serveur — EvoForge</title>
+<!-- PAGE REBOND des liens de partage EvoForge.
+     Les messageries ne rendent cliquables que les liens http(s) : ce lien-ci l'est, et il rouvre le schéma
+     `evoforge://mp/<ip>:<port>?name=…` que l'app a déclaré sur Windows. Page statique, sans dépendance,
+     hébergeable n'importe où (GitHub Pages, un site, un hébergeur statique). Copiez le dossier `join/` et
+     indiquez son adresse dans EvoForge › Réglages › « Lien de partage ». Paramètres : ?ip=&port=&name= -->
+<meta property="og:title" content="Rejoindre un serveur Assetto Corsa EVO">
+<meta property="og:description" content="Ouvre EvoForge directement sur le serveur partagé.">
+<meta property="og:type" content="website">
+<style>
+  :root{--bg:#070a10;--bg-deep:#04060a;--card:#0e131d;--card2:#101826;--s0:#0a0e15;--ink:#e8eef6;--ink-dim:#b9c6d6;--muted:#8493a8;--muted2:#5f6d80;--accent:#e5241f;--accent2:#ff7d72;--ok:#33e08a;--line:#223145;--line-strong:#2c405a;--rs:7px;--r:11px}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(120% 65% at 88% -12%,rgba(229,36,31,.10),transparent 52%),var(--bg);color:var(--ink);font-family:'Segoe UI Variable Text','Segoe UI',system-ui,-apple-system,sans-serif}
+  .box{width:100%;max-width:520px;background:linear-gradient(180deg,var(--card2),var(--card) 55%);border:1px solid var(--line-strong);border-radius:14px;box-shadow:0 20px 60px -20px rgba(0,0,0,.85);padding:26px 26px 22px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:'Bahnschrift','Oswald','Segoe UI Semibold',system-ui,sans-serif;font-weight:700;font-size:1rem;letter-spacing:.15em}
+  .brand b{color:var(--accent2);font-weight:700}
+  .kick{font-family:'Bahnschrift','Oswald',system-ui,sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+  h1{margin:0;font-family:'Bahnschrift','Oswald','Segoe UI Semibold',system-ui,sans-serif;font-weight:700;font-size:1.45rem;line-height:1.15;color:#fff}
+  .addr{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.8rem;color:var(--ink-dim);margin-top:6px}
+  .row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .btn{flex:1 1 200px;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:var(--rs);font-family:'Bahnschrift','Oswald',system-ui,sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:1px solid var(--line-strong);background:var(--s0);color:var(--ink-dim)}
+  .btn.primary{border:none;background:linear-gradient(180deg,#54f3ad,var(--ok));color:#052b1a;box-shadow:0 12px 26px -10px rgba(51,224,138,.65)}
+  .note{margin-top:18px;font-size:.82rem;color:var(--muted);line-height:1.5}
+  .note a{color:var(--accent2);text-decoration:none}
+  .note a:hover{color:#fff}
+  .status{margin-top:12px;font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:.72rem;color:var(--muted2)}
+  .err{color:#ff4d4d}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="brand"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e5241f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l8-9 8 9-8 7z"/></svg>EVO<b>FORGE</b></div>
+  <div class="kick">Serveur partagé</div>
+  <h1 id="name">Serveur Assetto Corsa EVO</h1>
+  <div class="addr" id="addr"></div>
+  <div class="row">
+    <a class="btn primary" id="open" href="#">Ouvrir dans EvoForge</a>
+    <button class="btn" id="copy" type="button">Copier le lien EvoForge</button>
+  </div>
+  <div class="note">Pas encore EvoForge ? <a id="get" href="https://github.com/eatdasong/evoforge/releases" target="_blank" rel="noopener">Télécharger la dernière version</a>, lancez-la une fois, puis revenez cliquer sur « Ouvrir dans EvoForge ».</div>
+  <div class="status" id="status"></div>
+</div>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var ip = (q.get('ip') || '').trim(), port = (q.get('port') || '').trim(), name = (q.get('name') || '').trim();
+  var ok = /^[a-z0-9.\-]+$/i.test(ip) && /^\d{1,5}$/.test(port);
+  var link = ok ? 'evoforge://mp/' + ip + ':' + port + (name ? '?name=' + encodeURIComponent(name) : '') : '';
+  var $ = function (id) { return document.getElementById(id); };
+  if (name) { $('name').textContent = name; document.title = name + ' — EvoForge'; }
+  $('addr').textContent = ok ? ip + ':' + port : 'lien incomplet (ip et port manquants)';
+  if (!ok) { $('open').classList.add('err'); $('open').textContent = 'Lien invalide'; $('open').removeAttribute('href'); $('copy').disabled = true; return; }
+  $('open').setAttribute('href', link);
+  $('copy').onclick = function () {
+    var done = function () { $('status').textContent = 'Lien EvoForge copié.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { window.prompt('Copiez ce lien :', link); });
+    else window.prompt('Copiez ce lien :', link);
+  };
+  // on tente l'ouverture tout de suite ; si rien ne se passe, l'app n'est pas installée (le bouton reste)
+  var t0 = Date.now();
+  setTimeout(function () { try { location.href = link; } catch (e) { /* ignoré */ } }, 150);
+  setTimeout(function () { if (document.visibilityState === 'visible' && Date.now() - t0 > 1400) $('status').textContent = 'Si EvoForge ne s’est pas ouvert : installez-le, lancez-le une fois, puis réessayez.'; }, 1600);
+})();
+</script>
+</body>
+</html>
